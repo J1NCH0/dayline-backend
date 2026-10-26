@@ -51,3 +51,7 @@ Never commit `.env`. It's already in `.gitignore`.
 ## Deployment
 
 Runs on k3s (Kubernetes) on Hetzner. Manifests will be added with M1.
+
+## License
+
+[MIT](LICENSE)
