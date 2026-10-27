@@ -7,6 +7,7 @@ src/<module>/
 ├── controllers/      # HTTP only: routes, status codes, guards
 ├── services/         # business logic; orchestrates repositories
 ├── repositories/     # the ONLY code that talks to Prisma / the database
+│   └── inputs/       # repository parameter types: <name>.input.ts (CreateUserInput)
 ├── mappers/          # entity (Prisma model) → response DTO
 ├── dto/
 │   ├── request/      # incoming bodies/params, validated with class-validator
@@ -73,6 +74,17 @@ export class UsersService {
 ```
 
 Services stay database-agnostic and easy to unit test, because the repository is replaced by a plain mock. All queries for a table live in one place, and transactions stay inside repositories.
+
+### Data shapes per layer boundary
+
+| Boundary | Shape | Lives in | Example |
+|---|---|---|---|
+| HTTP → controller | request DTO (class, validated) | `dto/request/` | `RegisterRequestDto { email, password }` |
+| service → repository | repository input (plain type) | `repositories/inputs/` | `CreateUserInput { email, passwordHash }` |
+| repository → service | entity (generated Prisma type) | `src/generated/prisma` | `User` |
+| controller → HTTP | response DTO (via mapper) | `dto/response/` | `UserResponseDto { id, email, createdAt }` |
+
+Repository inputs are our own types, not Prisma's generated `Prisma.*CreateInput`, so services never import Prisma.
 
 ### DTOs and mappers
 

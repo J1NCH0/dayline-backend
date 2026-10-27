@@ -1,0 +1,1 @@
+export const PASSWORD_HASH_MEMORY_COST_KIB = 65536;
