@@ -1,5 +1,6 @@
 import { Controller, Get, ServiceUnavailableException } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
+import { DATABASE_UNAVAILABLE_MESSAGE } from '../constants/database-unavailable-message.constant.js';
 import type { HealthResponseDto } from '../dto/response/health.response.dto.js';
 import { HealthMapper } from '../mappers/health.mapper.js';
 import { HealthService } from '../services/health.service.js';
@@ -12,12 +13,11 @@ export class HealthController {
   @Get()
   async check(): Promise<HealthResponseDto> {
     const result = await this.healthService.check();
-    const response = HealthMapper.toResponse(result);
 
     if (!result.databaseReachable) {
-      throw new ServiceUnavailableException(response);
+      throw new ServiceUnavailableException(DATABASE_UNAVAILABLE_MESSAGE);
     }
 
-    return response;
+    return HealthMapper.toResponse(result);
   }
 }

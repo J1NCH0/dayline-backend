@@ -75,6 +75,23 @@ export class UsersService {
 
 Services stay database-agnostic and easy to unit test, because the repository is replaced by a plain mock. All queries for a table live in one place, and transactions stay inside repositories.
 
+### Response format (global, every endpoint)
+
+| Case | HTTP | Body |
+|---|---|---|
+| Success | 200 / 201 | `{ "status": 200, "data": { … } }` |
+| Error | 401, 403, 404, 409, 429, 500, 503 … | `{ "status": 409, "error": "Email is already registered" }` |
+| Form / validation error | 400 (or 409 for a taken unique field) | `{ "status": 400, "errors": { "email": ["email must be an email"] } }` |
+
+`status` always equals the HTTP status code. 204 responses have no body.
+
+It's produced in one place, `src/http/`:
+- `ResponseEnvelopeInterceptor` wraps controller return values in `{ status, data }`. Controllers just return the response DTO.
+- `AllExceptionsFilter` formats every exception. Unknown errors become `500 Internal server error` (details are only logged), and Prisma `P2002` becomes a generic `409`.
+- `FormValidationException` is the one global class for field errors. `ValidationPipe` throws it automatically, and services throw it for checks like "email already registered".
+
+There are **no per-situation error classes**. Services throw Nest's built-in HTTP exceptions (`ConflictException`, `UnauthorizedException`, …) or `FormValidationException`.
+
 ### Data shapes per layer boundary
 
 | Boundary | Shape | Lives in | Example |

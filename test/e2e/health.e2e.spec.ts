@@ -17,10 +17,13 @@ describe('GET /health (e2e)', () => {
     const response = await request(app.getHttpServer()).get('/health');
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ status: 'ok', database: 'up' });
+    expect(response.body).toEqual({
+      status: 200,
+      data: { status: 'ok', database: 'up' },
+    });
   });
 
-  it('returns 503 error/down when the database ping fails', async () => {
+  it('returns 503 when the database ping fails', async () => {
     app = await createTestApp({
       customize: (builder) =>
         builder.overrideProvider(HealthRepository).useValue({
@@ -31,6 +34,9 @@ describe('GET /health (e2e)', () => {
     const response = await request(app.getHttpServer()).get('/health');
 
     expect(response.status).toBe(503);
-    expect(response.body).toEqual({ status: 'error', database: 'down' });
+    expect(response.body).toEqual({
+      status: 503,
+      error: 'Database unavailable',
+    });
   });
 });
