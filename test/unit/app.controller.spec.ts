@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it } from 'bun:test';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
+import { AppController } from '../../src/app.controller.js';
+import { AppService } from '../../src/app.service.js';
 
 describe('AppController', () => {
   let appController: AppController;

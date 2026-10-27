@@ -6,23 +6,26 @@ NestJS API for [Dayline](../README.md): pay periods, the daily-limit engine, pay
 
 ## Stack
 
-- NestJS (TypeScript)
+- [Bun](https://bun.com) 1.4 runtime, package manager and test runner
+- NestJS 12 (TypeScript, ESM)
 - Prisma + PostgreSQL *(coming in M1)*
-- Vitest for unit and e2e tests
+- `bun test` + Supertest for unit and e2e tests
 - Oxlint + Prettier
 
 ## Setup
 
+Requires **Bun ≥ 1.4.4** (`curl -fsSL https://bun.com/install | bash`, or `bun upgrade`).
+
 ```sh
-npm install
+bun install
 ```
 
 ## Run
 
 ```sh
-npm run start         # once
-npm run start:dev     # watch mode
-npm run start:prod    # from dist/ (run `npm run build` first)
+bun run start         # run src/main.ts directly (no build step)
+bun run start:dev     # watch mode
+bun run typecheck     # tsc --noEmit
 ```
 
 The API listens on `http://localhost:3000`.
@@ -30,9 +33,9 @@ The API listens on `http://localhost:3000`.
 ## Test
 
 ```sh
-npm test              # unit tests
-npm run test:e2e      # end-to-end tests
-npm run test:cov      # coverage
+bun run test          # unit tests   (test/unit)
+bun run test:e2e      # end-to-end   (test/e2e)
+bun run test:cov      # coverage
 ```
 
 ## Configuration
@@ -55,3 +58,5 @@ Runs on k3s (Kubernetes) on Hetzner. Manifests will be added with M1.
 ## License
 
 [MIT](LICENSE)
+
+Code layout and conventions: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).

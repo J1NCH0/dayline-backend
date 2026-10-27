@@ -1,0 +1,1 @@
+export const JWT_ACCESS_SECRET_MIN_LENGTH = 32;

@@ -25,3 +25,5 @@ npm-debug.log*
 .env.*
 !.env.example
 *.tsbuildinfo
+
+/src/generated
