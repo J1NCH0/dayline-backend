@@ -1,0 +1,1 @@
+export const DEFAULT_THROTTLE_TTL_MS = 60_000;

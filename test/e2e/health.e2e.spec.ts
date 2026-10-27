@@ -21,11 +21,12 @@ describe('GET /health (e2e)', () => {
   });
 
   it('returns 503 error/down when the database ping fails', async () => {
-    app = await createTestApp((builder) =>
-      builder.overrideProvider(HealthRepository).useValue({
-        pingDatabase: () => Promise.reject(new Error('connection refused')),
-      }),
-    );
+    app = await createTestApp({
+      customize: (builder) =>
+        builder.overrideProvider(HealthRepository).useValue({
+          pingDatabase: () => Promise.reject(new Error('connection refused')),
+        }),
+    });
 
     const response = await request(app.getHttpServer()).get('/health');
 
